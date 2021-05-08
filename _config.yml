@@ -1,13 +1,13 @@
 # Site settings
-title: n0auth.com
+title: nicosp
 description: > # this means to ignore newlines until "baseurl:"
   short tutorials and stuff
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://n0auth.com" # the base hostname & protocol for your site
+url: "https://nicosp.github.io" # the base hostname & protocol for your site
 
-email: webmaster@n0auth.com
+email: nicosp@gmail.com
 #twitter_username: NicosPanayides
-#github_username:  jekyll
+github_username: nicosp
 
 # Build settings
 markdown: kramdown
