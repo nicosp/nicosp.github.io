@@ -5,14 +5,24 @@ date:   2021-05-08 16:45:00 +0300
 categories: linux
 ---
 # Install required packages
-
+As root:
 {% highlight shell %}
-su apt install uwsgi-plugin-python3
+echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" >/etc/apt/sources.list.d/pgadmin4.list
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | apt-key add
+apt update
+apt install uwsgi-plugin-python3 pgadmin4-server
+{% endhighlight %}
+
+# Create user and paths
+{% highlight shell %}
+adduser --system --home /var/lib/pgadmin --disabled-login --shell /usr/sbin/nologin pgadmin4
+mkdir /var/log/pgadmin
+chown pgadmin4 /var/log/pgadmin
 {% endhighlight %}
 
 # Systemd unit file
 Create /etc/systemd/system/pgadmin4.service
-{% highlight shell %}
+{% highlight INI %}
 [Unit]
 Description = PgAdmin4 uwsgi Service
 After = network.target network-online.target
@@ -48,10 +58,27 @@ WantedBy = multi-user.target
 # Configure pgadmin4
 Create /etc/pgadmin/config_system.py
 
-{% highlight shell %}
+{% highlight python %}
 LOG_FILE = '/var/log/pgadmin/pgadmin4.log'
 SQLITE_PATH = '/var/lib/pgadmin/pgadmin4.db'
 SESSION_DB_PATH = '/var/lib/pgadmin/sessions'
 STORAGE_DIR = '/var/lib/pgadmin/storage'
 {% endhighlight %}
 
+# Configure nginx
+
+{% highlight nginx %}
+upstream pgadmin {
+  server unix:///run/pgadmin4/pgadmin4.sock;
+}
+
+server {
+...
+  location ^~ /pgadmin {
+    include uwsgi_params;
+    uwsgi_pass  pgadmin;
+  }
+...
+}
+
+{% endhighlight %}
