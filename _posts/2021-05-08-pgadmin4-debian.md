@@ -65,6 +65,16 @@ SESSION_DB_PATH = '/var/lib/pgadmin/sessions'
 STORAGE_DIR = '/var/lib/pgadmin/storage'
 {% endhighlight %}
 
+Configure pgadmin
+{% highlight shell %}
+cd /usr/pgadmin
+source venv/bin/activate
+cd web
+python setup.py
+# Answer the questions
+chown pgadmin4:nogroup -R /var/lib/pgadmin
+{% endhighlight %}
+
 # Configure nginx
 
 {% highlight nginx %}
