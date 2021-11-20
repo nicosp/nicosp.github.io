@@ -8,10 +8,14 @@ categories: linux
 As root:
 {% highlight shell %}
 echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" >/etc/apt/sources.list.d/pgadmin4.list
-curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | apt-key add
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | gpg --dearmor > packages.pgadmin.gpg 
+install -o root -g root -m 644 packages.pgadmin.gpg /etc/apt/trusted.gpg.d/
+rm packages.pgadmin.gpg
 apt update
 apt install uwsgi-plugin-python3 pgadmin4-server
 {% endhighlight %}
+
+If you are running sid replace $(lsb_release -cs) with the current stable (bullseye)
 
 # Create user and paths
 {% highlight shell %}
